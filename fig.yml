@@ -1,0 +1,15 @@
+db:
+  privileged: true
+  image: adamwgoldberg/greenplum
+  hostname: gphost
+
+deepdive:
+  links:
+    - db:db
+  volumes:
+    - /home/ubuntu/deepdive/app:/root/deepdive/app
+  image: adamwgoldberg/deepdive-github:dev
+
+# Usage:
+# fig up -d
+# fig run deepdive bash

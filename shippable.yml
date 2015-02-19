@@ -1,0 +1,37 @@
+build_image: shippableimages/ubuntu1404_scala
+language: 
+  - scala
+cache: true
+scala:
+  - "2.10.3"
+python:
+  - "2.7"
+addons:
+  postgresql: '9.3'
+before_install: 
+  - shippable_retry sudo apt-get update
+  - shippable_retry sudo apt-get install -y python-dev postgresql-9.3 postgresql-contrib-9.3 postgresql-server-dev-9.3 gnuplot bc unzip 
+  - sudo echo "host all all localhost trust" > /etc/postgresql/9.3/main/pg_hba.conf
+  - sudo echo "local all all trust" >> /etc/postgresql/9.3/main/pg_hba.conf
+  - sudo service postgresql start
+jdk:
+  - openjdk7
+  - oraclejdk7
+env: 
+  global:
+    - PGUSER=postgres
+    - PGPASSWORD=""
+    - PGPORT=5432
+    - PGHOST=localhost
+    - DBNAME=deepdive_test
+    - LD_LIBRARY_PATH=/tmp/dw_linux/lib:/tmp/dw_linux/lib64:/tmp/dw_linux/lib/numactl-2.0.9
+before_script:
+  - unzip -o lib/dw_linux.zip -d /tmp/
+  - psql -c 'drop database if exists deepdive_test;' -U postgres
+  - psql -c 'create database deepdive_test;' -U postgres
+  - psql -c 'alter user postgres with superuser;' -U postgres
+script: 
+  - ./test.sh
+after_script:
+  - mkdir -p ./shippable/testresults
+  - sudo cp -r ./target/test-reports ./shippable/testresults
