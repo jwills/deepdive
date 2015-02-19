@@ -33,7 +33,7 @@ libraryDependencies ++= List(
   "play" %% "anorm" % "2.1.5"
 )
 
-testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-u", "target/test-reports")
+testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-u", "target/test-reports", "-oD")
 
 parallelExecution in Test := false
 
