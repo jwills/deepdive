@@ -41,5 +41,6 @@ before_script:
 script: 
   # Check both localhost and website
   - ./test.sh
+  - sbt clean coverage "test-only org.deepdive.test.unit.* -- -oF"
   - bash ./src/test/bash/linkcheck.sh http://localhost:4000/
   - bash ./src/test/bash/linkcheck.sh http://deepdive.stanford.edu/
